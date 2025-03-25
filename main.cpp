@@ -123,6 +123,13 @@ int main() {
     PanTiltMechanism panTilt(virtualCameraSize);
     scene.add(panTilt);
 
+    const auto ball_geometry = SphereGeometry::create(0.5, 16, 16);
+    const auto ball_material = MeshBasicMaterial::create();
+    ball_material->color = Color::red;
+    const auto ball = Mesh::create(ball_geometry, ball_material);
+    ball->position.set(10, 2, -10);
+    scene.add(ball);
+
     auto cameraHelper = CameraHelper::create(panTilt.getCamera());
     scene.add(cameraHelper);
 
@@ -140,11 +147,17 @@ int main() {
         const auto dt = clock.getDelta();
         panTilt.update(dt);
 
-        constexpr float amplitude = 90;
+        constexpr float amplitude = 180;
         constexpr float frequency = 0.05;
         const auto speed = math::TWO_PI * frequency * amplitude *
                            std::cos(math::TWO_PI * frequency * clock.elapsedTime);
         panTilt.setPanSpeed(math::degToRad(speed));
+
+        constexpr float amplitudeT = 180;
+        constexpr float frequencyT = 3.0;
+        const auto speedT = math::TWO_PI * frequencyT * amplitudeT *
+                           std::cos(math::TWO_PI * frequencyT * clock.elapsedTime);
+        panTilt.setTiltSpeed(math::degToRad(speedT));
 
         if (renderVirtual) {
             renderer.clear();
